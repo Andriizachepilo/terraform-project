@@ -13,3 +13,15 @@ variable "availability_zones" {
     description = "A list of the Availability Zones"
     
 }
+
+variable "ingress_http" {
+  type = any
+}
+
+variable "ingress_https" {
+  type = any
+}
+
+variable "egress_traffic" {
+  type = any
+}
