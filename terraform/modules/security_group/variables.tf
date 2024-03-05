@@ -14,3 +14,6 @@ variable "ingress_https" {
 variable "egress_traffic" {
   type = any
 }
+
+
+

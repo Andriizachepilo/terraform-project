@@ -5,9 +5,10 @@ ingress_http = {
     "HTTP" = {from_port = 80, to_port = 80,protocol = "tcp", cidr_blocks = ["0.0.0.0/0"]}
 }
 ingress_https = {
-    "HTTPS" = {from_port = 80, to_port = 80,protocol = "tcp", cidr_blocks = ["0.0.0.0/0"]}
+    "HTTPS" = {from_port = 443, to_port = 443,protocol = "tcp", cidr_blocks = ["0.0.0.0/0"]}
 }
 egress_traffic = {
     "outbound" = {from_port = 0,to_port = 0,protocol = "tcp",cidr_blocks = ["0.0.0.0/0"]}
 }
+
 

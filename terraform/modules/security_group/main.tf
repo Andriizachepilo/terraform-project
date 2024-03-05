@@ -30,6 +30,9 @@ resource "aws_security_group" "allow_https" {
   }
 }
 
+
+
+//outbound
 resource "aws_security_group" "egress_traffic" {
   vpc_id = var.vpc_id
   name = "allow_egress_traffic"
@@ -47,6 +50,8 @@ resource "aws_security_group" "egress_traffic" {
 }
 
 
+
+//ssh
 resource "aws_security_group" "allow_ssh" {
   name        = "allow ssh"
   description = "Allow shh inbound traffic"
@@ -61,6 +66,12 @@ resource "aws_security_group_rule" "my_ip_adress_inbound" {
   cidr_blocks = [format("%s/%s",data.external.myip.result["internet_ip"],32)]
   security_group_id = aws_security_group.allow_ssh.id
 }
+/*it might be a little thing, but rather then copying my new IP everytime I've applied the script
+which brings an IP (from the website) to the block above, I'm not sure wether its a good practice or not
+ */
+data "external" "myip" {
+  program = ["/bin/bash" , "${path.module}/script.sh"]
+}
 
 resource "aws_security_group_rule" "my_ip_adress_outbound" {
   type = "egress"
@@ -71,8 +82,5 @@ resource "aws_security_group_rule" "my_ip_adress_outbound" {
   security_group_id = aws_security_group.allow_ssh.id
 }
 
-data "external" "myip" {
-  program = ["/bin/bash" , "${path.module}/script.sh"]
-}
 
 
