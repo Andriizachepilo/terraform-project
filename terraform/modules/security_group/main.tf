@@ -84,19 +84,39 @@ resource "aws_security_group_rule" "my_ip_adress_outbound" {
 
 //for private instances
 
-resource "aws_security_group" "private_ssh_inbound" {
-  name        = "allow ssh for private "
-  description = "Allow private shh inbound traffic"
+resource "aws_security_group" "private_ssh_traffic" {
+  name        = "allow ssh for private"
+  description = "Allow private SSH inbound traffic"
   vpc_id      = var.vpc_id
 }
+
 resource "aws_security_group_rule" "private_ssh_ingress" {
   type              = "ingress"
   from_port         = 22
   to_port           = 22
   protocol          = "tcp"
-  cidr_blocks       = [format("%s/%s", data.external.myip.result["internet_ip"], 32)]
-  security_group_id = aws_security_group.private_ssh_inbound.id
+  source_security_group_id = aws_security_group.bastion.id
+  security_group_id = aws_security_group.private_ssh_traffic.id
 }
+
+resource "aws_security_group_rule" "private_tcp" {
+  type = "ingress"
+  from_port = 3000
+  to_port = 3000
+  protocol = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]  
+  security_group_id = aws_security_group.private_ssh_traffic.id
+}
+
+resource "aws_security_group_rule" "private_ssh_outbound" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"  
+  cidr_blocks       = ["0.0.0.0/0"]  
+  security_group_id = aws_security_group.private_ssh_traffic.id
+}
+
 
 //bastion
 resource "aws_security_group" "bastion" {
@@ -111,8 +131,6 @@ resource "aws_security_group" "bastion" {
     protocol    = "tcp"
     cidr_blocks = [format("%s/%s", data.external.myip.result["internet_ip"], 32)]
   }
-
-
   egress {
     from_port   = 0
     to_port     = 0
@@ -120,3 +138,31 @@ resource "aws_security_group" "bastion" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
+
+resource "aws_security_group" "smart_home_status" {
+  name        = "smart-home-status"
+  description = "Security group for the Smart Home Status Service"
+  vpc_id      = var.vpc_id  
+
+  
+  ingress {
+    from_port   = 443  
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"  
+    cidr_blocks = ["0.0.0.0/0"]  
+  }
+}
+
+
+
+
+
+

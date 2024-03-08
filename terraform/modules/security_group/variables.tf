@@ -15,5 +15,3 @@ variable "egress_traffic" {
   type = any
 }
 
-
-
