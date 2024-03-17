@@ -25,6 +25,6 @@ variable "key_name" {
   type = string
 }
 
-# variable "bastion_SG" {
-#   type = list(string)
-# }
+variable "bastion_SG" {
+  type = list(string)
+}

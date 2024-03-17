@@ -7,19 +7,19 @@ variable "targets_id" {
 }
 
 variable "alb_target_group_port" {
-  type = number
+  type = list(number)
 }
 
 variable "alb_target_group_protocol" {
-  type = string
+  type = list(string)
 }
 
 variable "instance_health_check_paths" {
   type = list(string)
 }
 
-variable "instance_count" {
-  type = number
+
+
+variable "alb_tg_name" {
+  type = list(string)
 }
-
-

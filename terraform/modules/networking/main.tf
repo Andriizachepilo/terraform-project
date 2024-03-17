@@ -1,7 +1,7 @@
 resource "aws_vpc" "project_vpc" {
   cidr_block           = var.cidr_block
   enable_dns_hostnames = true
-  
+
   tags = {
     Name = "project-vpc"
   }
@@ -27,7 +27,7 @@ resource "aws_subnet" "private_subnets" {
   vpc_id            = aws_vpc.project_vpc.id
   availability_zone = var.availability_zones[count.index]
   cidr_block        = var.private_subnets[count.index]
- tags = {
+  tags = {
     Name = "Private subnet ${count.index + 1}"
   }
 }
@@ -64,7 +64,7 @@ resource "aws_route_table" "private_route_table" {
   vpc_id = aws_vpc.project_vpc.id
 
   route {
-    cidr_block = "0.0.0.0/0"
+    cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.NAT_gateway.id
   }
 }
@@ -72,5 +72,5 @@ resource "aws_route_table" "private_route_table" {
 resource "aws_route_table_association" "private_association" {
   count          = length(aws_subnet.private_subnets)
   subnet_id      = aws_subnet.private_subnets[count.index].id
-  route_table_id = aws_route_table.private_route_table.id 
+  route_table_id = aws_route_table.private_route_table.id
 }

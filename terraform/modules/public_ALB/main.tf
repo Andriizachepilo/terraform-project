@@ -21,10 +21,8 @@ resource "aws_lb_listener" "public_facing_alb_listener" {
   }
 }
 
-
-
 resource "aws_lb_listener_rule" "dynamic_rules" {
-  count        = var.instance_count
+  count        = length(var.public_target_group_arn)
   listener_arn = aws_lb_listener.public_facing_alb_listener.arn
 
   action {

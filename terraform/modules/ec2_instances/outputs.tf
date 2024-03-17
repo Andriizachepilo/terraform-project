@@ -5,9 +5,12 @@ output "public_instance_ids" {
       aws_instance.service_heating,
       aws_instance.status
     ] :
-    instance.id if instance.subnet_id == var.public_subnets[0]
+    instance.id if contains(var.public_subnets, instance.subnet_id)
   ]
 }
+
+
+
 
 
 output "private_instance_id" {

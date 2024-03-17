@@ -66,9 +66,7 @@ resource "aws_security_group_rule" "my_ip_adress_inbound" {
   cidr_blocks       = [format("%s/%s", data.external.myip.result["internet_ip"], 32)]
   security_group_id = aws_security_group.allow_ssh.id
 }
-/*it might be a little thing, but rather then copying my new IP everytime I've applied the script
-which brings an IP (from the website) to the block above, I'm not sure wether its a good practice or not
- */
+
 data "external" "myip" {
   program = ["/bin/bash", "${path.module}/script.sh"]
 }
@@ -77,7 +75,7 @@ resource "aws_security_group_rule" "my_ip_adress_outbound" {
   type              = "egress"
   from_port         = 0
   to_port           = 0
-  protocol          = "-1"
+  protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.allow_ssh.id
 }
@@ -91,29 +89,31 @@ resource "aws_security_group" "private_ssh_traffic" {
 }
 
 resource "aws_security_group_rule" "private_ssh_ingress" {
-  type              = "ingress"
-  from_port         = 22
-  to_port           = 22
-  protocol          = "tcp"
+  type                     = "ingress"
+  from_port                = 22
+  to_port                  = 22
+  protocol                 = "tcp"
   source_security_group_id = aws_security_group.bastion.id
+  security_group_id        = aws_security_group.private_ssh_traffic.id
+}
+
+
+resource "aws_security_group_rule" "private_tcp" {
+  type              = "ingress"
+  from_port         = 3000
+  to_port           = 3000
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.private_ssh_traffic.id
 }
 
-resource "aws_security_group_rule" "private_tcp" {
-  type = "ingress"
-  from_port = 3000
-  to_port = 3000
-  protocol = "tcp"
-  cidr_blocks = ["0.0.0.0/0"]  
-  security_group_id = aws_security_group.private_ssh_traffic.id
-}
 
 resource "aws_security_group_rule" "private_ssh_outbound" {
   type              = "egress"
   from_port         = 0
   to_port           = 0
-  protocol          = "-1"  
-  cidr_blocks       = ["0.0.0.0/0"]  
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.private_ssh_traffic.id
 }
 
@@ -134,32 +134,11 @@ resource "aws_security_group" "bastion" {
   egress {
     from_port   = 0
     to_port     = 0
-    protocol    = "-1"
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
-
-resource "aws_security_group" "smart_home_status" {
-  name        = "smart-home-status"
-  description = "Security group for the Smart Home Status Service"
-  vpc_id      = var.vpc_id  
-
-  
-  ingress {
-    from_port   = 443  
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]  
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"  
-    cidr_blocks = ["0.0.0.0/0"]  
-  }
-}
 
 
 

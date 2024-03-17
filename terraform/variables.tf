@@ -98,24 +98,113 @@ variable "instance_health_check_paths" {
 }
 
 variable "private_instance_health_check" {
-  type = string
+  description = "Specifies the health check type for instances in a private subnet."
+  type        = string
 }
 
 
 variable "alb_listener_port" {
-  type = number
+  description = "Specifies the port number for the Application Load Balancer (ALB) listener."
+  type        = number
 }
 
 variable "type" {
-  type = list(string)
+  description = "Type of default rule (listener)"
+  type        = list(string)
 }
 
 
 variable "path_pattern" {
+  description = "List of path patterns for routing requests to different target groups."
+  type        = list(string)
+}
+
+
+variable "image_id" {
+  description = "List of AMI IDs for instances."
+  type        = list(string)
+}
+
+variable "template_name" {
+  description = "List of launch template names."
+  type        = list(string)
+}
+
+variable "template_name_private" {
+  description = "Specifies the name of the launch template for instances in a private subnet."
+  type        = string
+}
+
+variable "private_image_id" {
+  description = "Specifies the AMI ID for instances in a private subnet."
+  type        = string
+}
+
+variable "version_of_launch_template" {
+  description = "Specifies the version of the launch template."
+  type        = list(string)
+}
+
+variable "health_check_type" {
+  description = "Specifies the health check type for instances in a public subnet."
+  type        = list(string)
+}
+
+variable "max_size" {
+  description = "Specifies the maximum number of instances in the autoscaling group."
+  type        = list(number)
+}
+
+variable "min_size" {
+  description = "Specifies the minimum number of instances in the autoscaling group."
+  type        = list(number)
+}
+
+variable "desired_capacity" {
+  description = "Specifies the desired number of instances in the autoscaling group."
+  type        = list(number)
+}
+
+variable "alb_tg_name" {
+  description = "Specifies the name of the ALB target groups names"
   type = list(string)
 }
 
-variable "instance_count" {
-  description = "value"
+variable "max_size_private" {
+  description = "Specifies the maximum number of instances in the autoscaling group in a private subnet."
   type        = number
 }
+
+variable "min_size_private" {
+  description = "Specifies the minimum number of instances in the autoscaling group in a private subnet."
+  type        = number
+}
+
+variable "desired_capacity_private" {
+  description = "Specifies the desired number of instances in the autoscaling group in a private subnet."
+  type        = number
+}
+
+
+variable "health_check_type_private" {
+  description = "Specifies the health check type for instances in a private subnet."
+  type        = string
+}
+
+variable "name_asg_public" {
+  description = "Specifies the name of the autoscaling group in a public subnet."
+  type        = list(string)
+}
+
+variable "name_asg_private" {
+  description = "Specifies the name of the autoscaling group in a private subnet."
+  type        = string
+}
+
+variable "version_of_launch_template_private" {
+  description = "Specifies the version of the launch template"
+  type = string
+}
+
+
+

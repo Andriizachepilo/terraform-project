@@ -18,7 +18,7 @@ data "aws_ami" "ubuntu" {
 resource "aws_instance" "service_lighting" {
   ami                    = data.aws_ami.ubuntu.id
   instance_type          = var.instance_type
-  subnet_id              = var.public_subnets[0]
+  subnet_id              = var.public_subnets[2]
   vpc_security_group_ids = var.security_group_ids
   key_name               = var.key_name
 
@@ -32,7 +32,7 @@ resource "aws_instance" "service_lighting" {
 resource "aws_instance" "service_heating" {
   ami                    = data.aws_ami.ubuntu.id
   instance_type          = var.instance_type
-  subnet_id              = var.public_subnets[0]
+  subnet_id              = var.public_subnets[1]
   vpc_security_group_ids = var.security_group_ids
   key_name               = var.key_name
 
@@ -68,15 +68,15 @@ resource "aws_instance" "auth" {
 
 }
 
-# resource "aws_instance" "bastion" {
-#   ami                         = data.aws_ami.ubuntu.id
-#   instance_type               = var.instance_type
-#   subnet_id                   = var.public_subnets[1]
-#   vpc_security_group_ids      = var.bastion_SG
-#   key_name                    = var.key_name
-#   associate_public_ip_address = true
+resource "aws_instance" "bastion" {
+  ami                         = data.aws_ami.ubuntu.id
+  instance_type               = var.instance_type
+  subnet_id                   = var.public_subnets[1]
+  vpc_security_group_ids      = var.bastion_SG
+  key_name                    = var.key_name
+  associate_public_ip_address = true
 
-#   tags = {
-#     Name = "bastion"
-#   }
-# }
+  tags = {
+    Name = "bastion"
+  }
+}

@@ -56,17 +56,48 @@ alb_listener_port     = 80
 alb_listener_protocol = "HTTP"
 
 #alb listener rules
-type         = ["forward","forward","forward"]
+type         = ["forward", "forward", "forward"]
 path_pattern = ["/api/lights", "/api/heating", "/api/status"]
 
 
 #alb target groups
-alb_target_group_port       = [3000]
-alb_target_group_protocol   = ["HTTP"]
-instance_health_check_paths = ["/api/lights/health", "/api/heating/health", "/api/status/health"]  
+alb_tg_name                 = ["tg-lights", "tg-heating", "tg-status"]
+alb_target_group_port       = [3000, 3000, 3000]
+alb_target_group_protocol   = ["HTTP", "HTTP", "HTTP"]
+instance_health_check_paths = ["/api/lights/health", "/api/heating/health", "/api/status/health"]
+
+
+#launch template with public services
+
+image_id      = ["ami-06b1d61aeb0123dea", "ami-090f22ececb80c818", "ami-09079ecef4e5362e6"]
+template_name = ["service_lighting", "service_heating", "service_status"]
 
 
 
-##################
-instance_count = 3
+#launch template with the private service
+private_image_id      = "ami-004926468c0bf8928"
+template_name_private = "service_auth"
+
+
+
+#autoscailing group for public launch templates
+name_asg_public            = ["lighting_asg", "heating_asg", "status_asg"]
+version_of_launch_template = ["$Latest", "$Latest", "$Latest"]
+desired_capacity           = [0, 0, 0]
+min_size                   = [0, 0, 0]
+max_size                   = [0, 0, 0]
+health_check_type          = ["ELB", "ELB", "ELB"]
+
+
+#autoscailing group for private launch template
+name_asg_private                   = "auth_asg"
+max_size_private                   = 0
+min_size_private                   = 0
+desired_capacity_private           = 0
+health_check_type_private          = "ELB"
+version_of_launch_template_private = "$Latest"
+
+
+
+
 
