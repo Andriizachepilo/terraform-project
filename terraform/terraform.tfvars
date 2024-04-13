@@ -5,20 +5,6 @@ public_subnets     = ["10.0.0.0/24", "10.0.1.0/24", "10.0.2.0/24"]
 private_subnets    = ["10.0.3.0/24", "10.0.4.0/24", "10.0.5.0/24"]
 availability_zones = ["eu-west-2a", "eu-west-2b", "eu-west-2c"]
 
-#Secutiry groups
-
-
-ingress_http = {
-  "HTTP"                    = { from_port = 80, to_port = 80, protocol = "tcp", cidr_blocks = ["0.0.0.0/0"] }
-  "allow_http_on_port_3000" = { from_port = 3000, to_port = 3000, protocol = "tcp", cidr_blocks = ["0.0.0.0/0"] }
-}
-
-ingress_https = {
-  "HTTPS" = { from_port = 443, to_port = 443, protocol = "tcp", cidr_blocks = ["0.0.0.0/0"] }
-}
-egress_traffic = {
-  "outbound" = { from_port = 0, to_port = 65535, protocol = "tcp", cidr_blocks = ["0.0.0.0/0"] }
-}
 
 #DynamoDB 
 
