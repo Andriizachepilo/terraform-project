@@ -18,8 +18,6 @@ variable "instance_health_check_paths" {
   type = list(string)
 }
 
-
-
 variable "alb_tg_name" {
   type = list(string)
 }

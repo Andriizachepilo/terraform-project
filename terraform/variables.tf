@@ -16,20 +16,6 @@ variable "availability_zones" {
   description = "Specifies the list of availability zones where your resources will be distributed. Each subnet typically corresponds to an availability zone."
 }
 
-variable "ingress_http" {
-  type        = any
-  description = "Specifies the ingress rules for HTTP traffic. This variable could represent security group rules allowing HTTP traffic from specific sources."
-}
-
-variable "ingress_https" {
-  type        = any
-  description = "Specifies the ingress rules for HTTPS traffic. This variable could represent security group rules allowing HTTPS traffic from specific sources."
-}
-
-variable "egress_traffic" {
-  type        = any
-  description = "Specifies the egress rules for outbound traffic. This variable could represent security group rules allowing outbound traffic to specific destinations."
-}
 
 variable "table_name" {
   type        = map(string)

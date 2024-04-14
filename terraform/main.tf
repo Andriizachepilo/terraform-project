@@ -7,7 +7,7 @@ module "vpc" {
 }
 
 module "security_groups" {
-  source = "./modules/Security-Group"
+  source = "./modules/Security_Group"
   vpc_id = module.vpc.vpc_id
 }
 
@@ -23,10 +23,10 @@ module "ec2" {
   instance_type                  = var.instance_type
   public_subnets                 = module.vpc.public_subnets
   private_subnets                = module.vpc.private_subnets
-  security_group_ids             = module.security_groups.security_group_ids
-  security_group_ids_private_ec2 = [module.security_groups.security_group_private_instances]
+  security_group_ids             = [module.security_groups.public_sg_id]
+  security_group_ids_private_ec2 = [module.security_groups.private_sg_id]
   key_name                       = var.key_name
-  bastion_SG                     = module.security_groups.bastion_SG
+  bastion_SG                     = [module.security_groups.bastion_sg_id]
 }
 
 module "application_load_balancer_target_group" {
@@ -43,9 +43,9 @@ module "application_load_balancer_target_group" {
 
 module "application_load_balancer" {
   source                  = "./modules/Application_LB"
-  public_target_group_arn = module.public_load_balancer_target_group.target_group_arn
+  public_target_group_arn = module.application_load_balancer_target_group.target_group_arn
   public_subnets          = module.vpc.public_subnets
-  security_groups         = module.security_groups.security_group_ids
+  security_groups         = [module.security_groups.public_sg_id]
   path_pattern            = var.path_pattern
   type                    = var.type
   alb_listener_port       = var.alb_listener_port
@@ -67,7 +67,7 @@ module "internal_load_balancer" {
   target_group_arn      = module.internal_load_balancer_target_group.arn
   ilb_listener_port     = var.ilb_listener_port
   ilb_listener_protocol = var.ilb_listener_protocol
-  security_groups       = [module.security_groups.security_group_private_instances]
+  security_groups       = [module.security_groups.private_sg_id]
   private_subnets       = module.vpc.private_subnets
 }
 
@@ -83,10 +83,10 @@ module "launch_template" {
   key_name               = var.key_name
   instance_type          = var.instance_type
   template_name          = var.template_name
-  vpc_security_group_ids = module.security_groups.security_group_ids
+  vpc_security_group_ids = [module.security_groups.public_sg_id]
   private_image_id       = var.private_image_id
   template_name_private  = var.template_name_private
-  private_security_group = [module.security_groups.security_group_private_instances]
+  private_security_group = [module.security_groups.private_sg_id]
   public_subnet_id       = module.vpc.public_subnets[0]
   private_subnet_id      = module.vpc.private_subnets[0]
 }
@@ -111,12 +111,13 @@ module "asg_private_and_public_launch" {
   version_of_launch_template    = var.version_of_launch_template
   public_launch_id              = module.launch_template.launch_template_for_public_services
   subnets_for_autoscaling_group = module.vpc.public_subnets
+ 
 }
 
 module "asg_attachment_private_and_public" {
   source                   = "./modules/Autoscaling_attachment"
   name_asg_public          = var.name_asg_public
-  public_target_group_arn  = module.public_load_balancer_target_group.target_group_arn
+  public_target_group_arn  = module.application_load_balancer_target_group.target_group_arn
   name_asg_private         = var.name_asg_private
   private_target_group_arn = module.internal_load_balancer_target_group.arn
   depends_on               = [module.asg_private_and_public_launch]
