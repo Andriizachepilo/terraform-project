@@ -1,5 +1,5 @@
 module "vpc" {
-  source             = "./modules/networking"
+  source             = "./modules/Networking"
   cidr_block         = var.cidr_block
   public_subnets     = var.public_subnets
   private_subnets    = var.private_subnets
@@ -7,29 +7,29 @@ module "vpc" {
 }
 
 module "security_groups" {
-  source         = "./modules/security_group"
-  vpc_id         = module.vpc.vpc_id
+  source = "./modules/Security-Group"
+  vpc_id = module.vpc.vpc_id
 }
 
-module "dynamoDB_table" {
-  source        = "./modules/dynamo_db_tables"
+module "dynamoDB" {
+  source        = "./modules/Databases"
   table_name    = var.table_name
   hash_key_name = var.hash_key_name
   hash_key_type = var.hash_key_type
 }
 
 module "ec2" {
-  source                         = "./modules/ec2_instances"
+  source                         = "./modules/EC2"
   instance_type                  = var.instance_type
   public_subnets                 = module.vpc.public_subnets
   private_subnets                = module.vpc.private_subnets
   security_group_ids             = module.security_groups.security_group_ids
   security_group_ids_private_ec2 = [module.security_groups.security_group_private_instances]
   key_name                       = var.key_name
-  bastion_SG = module.security_groups.bastion_SG
+  bastion_SG                     = module.security_groups.bastion_SG
 }
 
-module "public_load_balancer_target_group" {
+module "application_load_balancer_target_group" {
   source                      = "./modules/ALB_target_group"
   alb_tg_name                 = var.alb_tg_name
   targets_id                  = module.ec2.public_instance_ids
@@ -37,12 +37,12 @@ module "public_load_balancer_target_group" {
   alb_target_group_port       = var.alb_target_group_port
   alb_target_group_protocol   = var.alb_target_group_protocol
   instance_health_check_paths = var.instance_health_check_paths
- 
+
 
 }
 
-module "public_load_balancer" {
-  source                  = "./modules/public_ALB"
+module "application_load_balancer" {
+  source                  = "./modules/Application_LB"
   public_target_group_arn = module.public_load_balancer_target_group.target_group_arn
   public_subnets          = module.vpc.public_subnets
   security_groups         = module.security_groups.security_group_ids
@@ -63,7 +63,7 @@ module "internal_load_balancer_target_group" {
 }
 
 module "internal_load_balancer" {
-  source                = "./modules/internal_LB"
+  source                = "./modules/Internal_LB"
   target_group_arn      = module.internal_load_balancer_target_group.arn
   ilb_listener_port     = var.ilb_listener_port
   ilb_listener_protocol = var.ilb_listener_protocol
@@ -93,7 +93,7 @@ module "launch_template" {
 
 
 module "asg_private_and_public_launch" {
-  source                                = "./modules/autoscaling_group"
+  source                                = "./modules/Autoscaling"
   name_asg_private                      = var.name_asg_private
   max_size_private                      = var.max_size_private
   min_size_private                      = var.min_size_private
@@ -114,7 +114,7 @@ module "asg_private_and_public_launch" {
 }
 
 module "asg_attachment_private_and_public" {
-  source                   = "./modules/asg_attachment"
+  source                   = "./modules/Autoscaling_attachment"
   name_asg_public          = var.name_asg_public
   public_target_group_arn  = module.public_load_balancer_target_group.target_group_arn
   name_asg_private         = var.name_asg_private
