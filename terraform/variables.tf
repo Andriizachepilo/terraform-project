@@ -48,12 +48,12 @@ variable "alb_listener_protocol" {
 }
 
 variable "alb_target_group_port" {
-  type        = list(number)
+  type        = number
   description = "Specifies the port number for the ALB target group."
 }
 
 variable "alb_target_group_protocol" {
-  type        = list(string)
+  type        = string
   description = "Specifies the protocol used by the ALB target group, such as HTTP or HTTPS."
 }
 

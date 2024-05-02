@@ -1,4 +1,4 @@
-resource "aws_dynamodb_table" "example" {
+resource "aws_dynamodb_table" "dynamoDB" {
   for_each      = var.table_name
 
   name          = each.value

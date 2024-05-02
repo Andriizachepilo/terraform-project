@@ -68,11 +68,11 @@ template_name_private = "service_auth"
 
 #autoscailing group for public launch templates
 name_asg_public            = ["lighting_asg", "heating_asg", "status_asg"]
-version_of_launch_template = ["$Latest", "$Latest", "$Latest"]
-desired_capacity           = [0, 0, 0]
-min_size                   = [0, 0, 0]
-max_size                   = [0, 0, 0]
-health_check_type          = ["ELB", "ELB", "ELB"]
+version_of_launch_template = "$Latest"
+desired_capacity           = 2
+min_size                   = 1
+max_size                   = 2
+health_check_type          = "ELB"
 
 
 #autoscailing group for private launch template
