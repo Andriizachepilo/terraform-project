@@ -42,14 +42,14 @@ alb_listener_port     = 80
 alb_listener_protocol = "HTTP"
 
 #alb listener rules
-type         = ["forward", "forward", "forward"]
+type         = "forward"
 path_pattern = ["/api/lights", "/api/heating", "/api/status"]
 
 
 #alb target groups
 alb_tg_name                 = ["tg-lights", "tg-heating", "tg-status"]
-alb_target_group_port       = [3000, 3000, 3000]
-alb_target_group_protocol   = ["HTTP", "HTTP", "HTTP"]
+alb_target_group_port       = 3000
+alb_target_group_protocol   = "HTTP"
 instance_health_check_paths = ["/api/lights/health", "/api/heating/health", "/api/status/health"]
 
 

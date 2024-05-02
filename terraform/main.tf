@@ -38,7 +38,6 @@ module "application_load_balancer_target_group" {
   alb_target_group_protocol   = var.alb_target_group_protocol
   instance_health_check_paths = var.instance_health_check_paths
 
-
 }
 
 module "application_load_balancer" {
@@ -47,9 +46,10 @@ module "application_load_balancer" {
   public_subnets          = module.vpc.public_subnets
   security_groups         = [module.security_groups.public_sg_id]
   path_pattern            = var.path_pattern
-  type                    = var.type
+  type                    = var.lb_type
   alb_listener_port       = var.alb_listener_port
   alb_listener_protocol   = var.alb_listener_protocol
+  lb_type = var.lb_type
 
 }
 

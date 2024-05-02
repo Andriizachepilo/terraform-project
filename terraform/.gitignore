@@ -1,6 +1,0 @@
-**/.terraform/*
-*.pem
-*.tfstate
-*.tfstate.*
-.terraformrc
-

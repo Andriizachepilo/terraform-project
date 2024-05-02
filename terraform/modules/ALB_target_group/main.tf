@@ -1,8 +1,8 @@
 resource "aws_lb_target_group" "public_ALB_target_group" {
   count    = length(var.alb_tg_name)
   name     = var.alb_tg_name[count.index]
-  port     = var.alb_target_group_port[count.index]
-  protocol = var.alb_target_group_protocol[count.index]
+  port     = var.alb_target_group_port
+  protocol = var.alb_target_group_protocol
   vpc_id   = var.vpc_id
 
   health_check {

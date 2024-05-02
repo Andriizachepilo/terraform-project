@@ -14,6 +14,10 @@ variable "alb_listener_protocol" {
   type = string
 }
 
+variable "lb_type" {
+  type = string
+  
+}
 
 variable "public_target_group_arn" {
   type = list(string)
@@ -21,7 +25,7 @@ variable "public_target_group_arn" {
 
 
 variable "type" {
-  type = list(string)
+  type = string
 }
 variable "path_pattern" {
   type = list(string)

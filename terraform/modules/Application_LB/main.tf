@@ -1,9 +1,9 @@
 resource "aws_lb" "app_load_balancer" {
   name               = "Public-facing-ALB"
   internal           = false
-  load_balancer_type = "application"
-  security_groups    = var.security_groups[*]
-  subnets            = var.public_subnets[*]
+  load_balancer_type = var.lb_type
+  security_groups    = join(",", var.security_groups)
+  subnets            = join(",", sort(var.public_subnets))
 
 }
 
@@ -26,7 +26,7 @@ resource "aws_lb_listener_rule" "dynamic_rules" {
   listener_arn = aws_lb_listener.public_facing_alb_listener.arn
 
   action {
-    type             = var.type[count.index]
+    type             = var.type
     target_group_arn = var.public_target_group_arn[count.index]
   }
   condition {

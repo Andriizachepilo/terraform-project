@@ -98,7 +98,7 @@
 
 data "external" "myip" {
 
-program = ["bash", "${path.module}/script.sh"]
+  program = ["bash", "${path.module}/script.sh"]
 
 }
 
@@ -108,15 +108,15 @@ resource "aws_security_group" "bastion_sg" {
   description = "Security group for bastion host"
   vpc_id      = var.vpc_id
 
- 
-ingress {
+
+  ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = [format("%s/%s", data.external.myip.result["internet_ip"], 32)] 
+    cidr_blocks = [format("%s/%s", data.external.myip.result["internet_ip"], 32)]
   }
 
- 
+
   egress {
     from_port   = 80
     to_port     = 443
@@ -134,17 +134,17 @@ resource "aws_security_group" "public_sg" {
 
 
   ingress {
-    from_port        = 22
-    to_port          = 22
-    protocol         = "tcp"
-    security_groups  = [aws_security_group.bastion_sg.id]
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
+    security_groups = [aws_security_group.bastion_sg.id]
   }
 
   ingress {
-    from_port        = 80
-    to_port          = 443
-    protocol         = "tcp"
-    security_groups  = [aws_security_group.bastion_sg.id]
+    from_port       = 80
+    to_port         = 443
+    protocol        = "tcp"
+    security_groups = [aws_security_group.bastion_sg.id]
   }
 
 }
@@ -155,20 +155,72 @@ resource "aws_security_group" "private_sg" {
   description = "Security group for private EC2 instance"
   vpc_id      = var.vpc_id
 
- 
+
   ingress {
-    from_port        = 22
-    to_port          = 22
-    protocol         = "tcp"
-    security_groups  = [aws_security_group.bastion_sg.id]
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
+    security_groups = [aws_security_group.bastion_sg.id]
   }
 
- 
+
   ingress {
-    from_port        = 80
-    to_port          = 443
-    protocol         = "tcp"
-    security_groups  = [aws_security_group.bastion_sg.id]
+    from_port       = 80
+    to_port         = 443
+    protocol        = "tcp"
+    security_groups = [aws_security_group.bastion_sg.id]
   }
+
+}
+
+resource "aws_security_group" "load_balancer_sg" {
+  vpc_id = var.vpc_id
+
+  ingress = {
+    from_port  = 80
+    to_port    = 443
+    protocol   = "tcp"
+    cidr_block = ["0.0.0.0/0"]
+
+  }
+
+  egress = {
+    from_port  = 0
+    to_port    = 65535
+    protocol   = "tcp"
+    cidr_block = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_security_group" "public_app_sg" {
+  vpc_id = var.vpc_id
+
+  ingress {
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
+    security_groups = [aws_security_group.bastion_sg.id]
+  }
+
+  ingress {
+    from_port       = 3000
+    to_port         = 3003
+    protocol        = "tcp"
+    security_groups = [aws_security_group.load_balancer_sg.id]
+  }
+
+  egress = {
+    from_port  = 0
+    to_port    = 55555
+    protocol   = "tcp"
+    cidr_block = ["0.0.0.0/0"]
+  }
+
+}
+
+
+resource "aws_security_group" "internal_lb_sg" {
+  vpc_id = var.vpc_id
+
   
 }
