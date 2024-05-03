@@ -80,7 +80,7 @@ module "script_instances_id" {
 
 
 module "launch_template" {
-  source                 = "./modules/launch_template"
+  source                 = "./modules/Launch-template"
 
   image_id               = var.image_id
   key_name               = var.key_name
@@ -116,7 +116,6 @@ module "asg_private_and_public_launch" {
   public_launch_id              = module.launch_template.launch_template_for_public_services
   subnets_for_autoscaling_group = module.vpc.public_subnets
 
-  name_asg_public          = var.name_asg_public
   public_target_group_arn  = module.application_load_balancer_target_group.target_group_arn
   private_target_group_arn = module.internal_load_balancer_target_group.arn
   depends_on               = [module.asg_private_and_public_launch]

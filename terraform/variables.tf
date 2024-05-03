@@ -135,9 +135,11 @@ variable "health_check_type" {
   description = "Specifies the health check type for instances in a public subnet."
   type        = list(string)
 }
+
 variable "lb_type" {
   type = string
 }
+
 variable "max_size" {
   description = "Specifies the maximum number of instances in the autoscaling group."
   type        = list(number)

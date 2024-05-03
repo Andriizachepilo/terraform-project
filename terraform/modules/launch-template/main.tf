@@ -13,6 +13,7 @@ resource "aws_launch_template" "launch_template_for_public_services" {
   }
 }
 
+
 resource "aws_launch_template" "launch_template_for_private_service" {
   name          = var.template_name_private
   image_id      = var.private_image_id

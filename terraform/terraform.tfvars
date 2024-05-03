@@ -77,9 +77,9 @@ health_check_type          = "ELB"
 
 #autoscailing group for private launch template
 name_asg_private                   = "auth_asg"
-max_size_private                   = 0
-min_size_private                   = 0
-desired_capacity_private           = 0
+max_size_private                   = 1
+min_size_private                   = 1
+desired_capacity_private           = 1
 health_check_type_private          = "ELB"
 version_of_launch_template_private = "$Latest"
 
