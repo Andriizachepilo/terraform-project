@@ -1,4 +1,4 @@
-CloudSmartHome
+
 CloudSmartHome is a cloud-native smart home solution designed and implemented as part of a cloud engineering project. Leveraging the power of AWS and Terraform, CloudSmartHome provides a scalable and resilient microservices network for managing home automation systems.
 
 Overview
@@ -27,3 +27,35 @@ To distribute incoming traffic efficiently and ensure high availability of servi
 
 Autoscaling
 CloudSmartHome leverages autoscaling capabilities to dynamically adjust the number of EC2 instances based on workload demand. This ensures optimal resource utilization and cost efficiency, allowing the system to scale seamlessly with changing requirements.
+
+
+Usage
+Getting Started
+AWS Account and Credentials
+
+Create an AWS Account
+Install AWS CLI
+Create an AWS IAM User with Admin or Power User Permissions
+this user will only be used locally
+Configure the AWS CLI with the IAM User from the previous step.
+Terraform will read your credentials via the AWS CLI
+Other Authentication Methods with AWS and Terraform
+Terraform
+
+Install HashiCorp Terraform
+Install Node.js
+Before proceeding, ensure that you have authenticated your AWS account via the AWS CLI using your access keys.
+
+Usage: Create an key-pair
+In order to ssh into the bastion (and then into the app servers/instances), remember to create a key pair in the aws console with the name of smarthome-apps and apply the ssh command in the same directory that your .pem key file is in.
+
+Usage: Create an IAM USER
+You need to create an IAM user for these future services (lighting, heating) to interact with the databases so that they can authenticate the requests.
+
+Use the IAM service on the AWS console to create a user that;
+
+Has policies which allow full access to DynamoDB
+Once created, give this user CLI access and save your keys somewhere as you will need to inject them later on into some of the services. (Check the .env.local files)
+Usage: Customize the values of the terraform.tfvars file
+To use these modules in your infrastructure, redirect yourself to the terraform.tfvars file located in the root directory and customize the values according to your specific requirements.
+
