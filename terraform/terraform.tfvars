@@ -38,7 +38,7 @@ private_instance_health_check       = "/api/auth"
 
 
 #Aplication load balancer 
-alb_listener_port     = 80
+# alb_listener_port     = 80
 alb_listener_protocol = "HTTP"
 
 #alb listener rules

@@ -10,7 +10,7 @@ resource "aws_security_group" "bastion_sg" {
   description = "Security group for bastion host"
   vpc_id      = var.vpc_id
 
-#allow ingress only from my ip into the bastion instance
+  #allow ingress only from my ip into the bastion instance
   ingress {
     from_port   = 22
     to_port     = 22
@@ -92,13 +92,20 @@ resource "aws_security_group" "private_instance_sg" {
 resource "aws_security_group" "load_balancer_sg" {
   vpc_id = var.vpc_id
 
-#allow all ingress traffic to the public load balancer
+  #allow all ingress traffic to the public load balancer
   ingress = {
     from_port  = 80
     to_port    = 443
     protocol   = "tcp"
     cidr_block = ["0.0.0.0/0"]
 
+  }
+#allow egress traffic only from public ec2 instances
+  egress = {
+    from_port       = 3000
+    to_port         = 3003
+    protocol        = "tcp"
+    security_groups = [aws_security_group.public_instance_sg.id]
   }
 
 }
@@ -114,5 +121,12 @@ resource "aws_security_group" "internal_lb_sg" {
     security_groups = [aws_security_group.load_balancer_sg.id]
   }
 
+#allow egress traffic only from private ec2 instance
+  egress = {
+    from_port       = 3000
+    to_port         = 3004
+    protocol        = "tcp"
+    security_groups = [aws_security_group.private_instance_sg.id]
+  }
 }
 

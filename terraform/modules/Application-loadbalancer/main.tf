@@ -9,7 +9,7 @@ resource "aws_lb" "app_load_balancer" {
 
 resource "aws_lb_listener" "public_facing_alb_listener" {
   load_balancer_arn = aws_lb.app_load_balancer.arn
-  port              = var.alb_listener_port
+  port              = var.alb_listener_protocol == "HTTP" ? 80 : 443
   protocol          = var.alb_listener_protocol
   default_action {
     type = "fixed-response"
