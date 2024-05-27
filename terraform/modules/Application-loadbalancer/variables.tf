@@ -6,9 +6,7 @@ variable "public_subnets" {
   type = list(string)
 }
 
-variable "alb_listener_port" {
-  type = number
-}
+
 
 variable "alb_listener_protocol" {
   type = string

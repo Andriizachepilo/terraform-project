@@ -89,10 +89,6 @@ variable "private_instance_health_check" {
 }
 
 
-variable "alb_listener_port" {
-  description = "Specifies the port number for the Application Load Balancer (ALB) listener."
-  type        = number
-}
 
 variable "type" {
   description = "Type of default rule (listener)"

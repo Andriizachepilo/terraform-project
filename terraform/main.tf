@@ -43,7 +43,6 @@ module "application_load_balancer" {
   security_groups         = [module.security_groups.public_lb_sg]
   path_pattern            = var.path_pattern
   type                    = var.lb_type
-  alb_listener_port       = var.alb_listener_port
   alb_listener_protocol   = var.alb_listener_protocol
   lb_type                 = var.lb_type
 
@@ -118,7 +117,7 @@ module "asg_private_and_public_launch" {
 
   public_target_group_arn  = module.application_load_balancer_target_group.target_group_arn
   private_target_group_arn = module.internal_load_balancer_target_group.arn
-  depends_on               = [module.asg_private_and_public_launch]
+ 
 
 }
 

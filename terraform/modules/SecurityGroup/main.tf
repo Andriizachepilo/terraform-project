@@ -50,11 +50,11 @@ resource "aws_security_group" "public_instance_sg" {
   }
 
   #allow all egress for "git clone " and "docker pull"
-  egress = {
+  egress  {
     from_port  = 0
     to_port    = 65535
     protocol   = "tcp"
-    cidr_block = ["0.0.0.0/0"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
 }
@@ -80,11 +80,11 @@ resource "aws_security_group" "private_instance_sg" {
   }
 
   #allow all egress for "git clone" and "docker pull"
-  egress = {
+  egress  {
     from_port  = 0
     to_port    = 65535
     protocol   = "tcp"
-    cidr_block = ["0.0.0.0/0"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
@@ -93,15 +93,15 @@ resource "aws_security_group" "load_balancer_sg" {
   vpc_id = var.vpc_id
 
   #allow all ingress traffic to the public load balancer
-  ingress = {
+  ingress  {
     from_port  = 80
     to_port    = 443
     protocol   = "tcp"
-    cidr_block = ["0.0.0.0/0"]
+    cidr_blocks = ["0.0.0.0/0"]
 
   }
 #allow egress traffic only from public ec2 instances
-  egress = {
+  egress  {
     from_port       = 3000
     to_port         = 3003
     protocol        = "tcp"
@@ -114,7 +114,7 @@ resource "aws_security_group" "load_balancer_sg" {
 resource "aws_security_group" "internal_lb_sg" {
   vpc_id = var.vpc_id
 
-  ingress = {
+  ingress  {
     from_port       = 80
     to_port         = 443
     protocol        = "tcp"
@@ -122,7 +122,7 @@ resource "aws_security_group" "internal_lb_sg" {
   }
 
 #allow egress traffic only from private ec2 instance
-  egress = {
+  egress  {
     from_port       = 3000
     to_port         = 3004
     protocol        = "tcp"
