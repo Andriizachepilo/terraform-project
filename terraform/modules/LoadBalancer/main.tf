@@ -15,19 +15,21 @@ resource "aws_lb_listener" "public_facing_alb_listener" {
     type = "fixed-response"
     fixed_response {
       content_type = "text/plain"
-      message_body = "Not found :( "
+      message_body = "Not found :("
       status_code  = "404"
     }
   }
+
+  depends_on = [aws_lb_target_group.public_ALB_target_group]
 }
 
 resource "aws_lb_listener_rule" "dynamic_rules" {
-  count        = length(var.public_target_group_arn)
+  count        = length(var.alb_tg_name)
   listener_arn = aws_lb_listener.public_facing_alb_listener.arn
 
   action {
     type             = var.type
-    target_group_arn = var.public_target_group_arn[count.index]
+    target_group_arn = aws_lb_target_group.public_ALB_target_group[*].arn
   }
   condition {
     path_pattern {
@@ -55,6 +57,48 @@ resource "aws_lb_target_group_attachment" "public_ALB_target_group_attachment" {
   count            = length(aws_lb_target_group.public_ALB_target_group[*].arn)
   target_group_arn = aws_lb_target_group.public_ALB_target_group[count.index].arn
   target_id        = var.targets_id[count.index]
+}
+
+#Internal load balancer
+
+resource "aws_lb" "internal_load_balancer" {
+  name            = "Internal-load-balancer"
+  internal        = true
+  security_groups = join(",", var.ilb_security_groups)
+  subnets         = join(",", sort(var.private_subnets))
+
+}
+
+resource "aws_lb_listener" "internal_lb_listener" {
+  load_balancer_arn = aws_lb.internal_load_balancer.arn
+  port              = var.ilb_listener_protocol == "HTTP" ? 80 : 443
+  protocol          = var.ilb_listener_protocol
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.internal_target_group.arn
+  }
+  depends_on = [aws_lb_target_group.internal_target_group]
+  
+}
+
+
+
+resource "aws_lb_target_group" "internal_target_group" {
+  name     = "Internal-load-balancer-TG"
+  port     = var.ilb_target_group_listener_port
+  protocol = var.ilb_target_group_listener_protocol
+  vpc_id   = var.vpc_id
+
+  health_check {
+    path = var.private_instance_health_check
+    port = aws_lb_listener.internal_lb_listener.port
+  }
+}
+
+resource "aws_lb_target_group_attachment" "internal_lb_target_group_attachment" {
+  target_group_arn = aws_lb_target_group.internal_target_group.arn
+  target_id        = var.target_private_instance
 }
 
 

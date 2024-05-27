@@ -92,7 +92,7 @@ variable "private_instance_health_check" {
 
 variable "type" {
   description = "Type of default rule (listener)"
-  type        = list(string)
+  type        = string
 }
 
 

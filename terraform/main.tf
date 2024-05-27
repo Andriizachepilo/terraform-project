@@ -35,51 +35,48 @@ module "ec2" {
 
 
 
-module "application_load_balancer" {
-  source = "./modules/Application-loadbalancer"
+module "load_balancer" {
+  source = "./modules/LoadBalancer"
 
-  public_target_group_arn = module.application_load_balancer_target_group.target_group_arn #
-  public_subnets          = module.vpc.public_subnets
-  security_groups         = [module.security_groups.public_lb_sg]
-  path_pattern            = var.path_pattern
-  type                    = var.lb_type
-  alb_listener_protocol   = var.alb_listener_protocol
-  lb_type                 = var.lb_type
+  vpc_id = module.vpc.vpc_id
 
-  alb_tg_name = var.alb_tg_name
-  targets_id                  = module.ec2.public_instance_ids
-  vpc_id                      = module.vpc.vpc_id
+  lb_type         = var.lb_type
+  public_subnets  = module.vpc.public_subnets
+  security_groups = [module.security_groups.public_lb_sg]
+
+  type = var.type
+
+  alb_listener_protocol = var.alb_listener_protocol
+
+  alb_tg_name                 = var.alb_tg_name
   alb_target_group_port       = var.alb_target_group_port
-  alb_target_group_protocol   = var.alb_target_group_protocol
+  alb_target_group_protocol   = var.alb_listener_protocol
   instance_health_check_paths = var.instance_health_check_paths
-}
+  path_pattern                = var.path_pattern
+  targets_id                  = module.ec2.public_instance_ids
 
+  ilb_security_groups = module.security_groups.internal_lb_sg
+  private_subnets     = module.security_groups.internal_lb_sg
 
-module "internal_load_balancer" {
-  source = "./modules/Internal-loadbalancer"
-
-  target_group_arn      = module.internal_load_balancer_target_group.arn
-  ilb_listener_port     = var.ilb_listener_port
   ilb_listener_protocol = var.ilb_listener_protocol
-  security_groups       = [module.security_groups.internal_lb_sg]
-  private_subnets       = module.vpc.private_subnets
 
-  vpc_id                             = module.vpc.vpc_id
-  ilb_target_group_listener_port     = var.ilb_listener_port
-  ilb_target_group_listener_protocol = var.ilb_listener_protocol
-  target_private_instance            = module.ec2.private_instance_id
+  ilb_target_group_listener_port     = var.ilb_target_group_listener_port
+  ilb_target_group_listener_protocol = var.alb_target_group_protocol
   private_instance_health_check      = var.private_instance_health_check
+
+  target_private_instance = module.ec2.private_instance_id
 }
+
 
 module "script_instances_id" {
-  source     = "./modules/script-custom-ami-ids"
+  source = "./modules/script-custom-ami-ids"
 
   depends_on = [module.ec2]
 }
 
 
 module "launch_template" {
-  source                 = "./modules/Launch-template"
+  source = "./modules/Launch-template"
 
   image_id               = var.image_id
   key_name               = var.key_name
@@ -94,8 +91,8 @@ module "launch_template" {
 }
 
 
-module "asg_private_and_public_launch" {
-  source                                = "./modules/Autoscaling"
+module "Autoscaling" {
+  source = "./modules/Autoscaling"
 
   name_asg_private                      = var.name_asg_private
   max_size_private                      = var.max_size_private
@@ -117,7 +114,5 @@ module "asg_private_and_public_launch" {
 
   public_target_group_arn  = module.application_load_balancer_target_group.target_group_arn
   private_target_group_arn = module.internal_load_balancer_target_group.arn
- 
-
 }
 
