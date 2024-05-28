@@ -79,7 +79,7 @@ resource "aws_lb_listener" "internal_lb_listener" {
     target_group_arn = aws_lb_target_group.internal_target_group.arn
   }
   depends_on = [aws_lb_target_group.internal_target_group]
-  
+
 }
 
 
