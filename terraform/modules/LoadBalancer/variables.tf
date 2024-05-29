@@ -63,7 +63,9 @@ variable "vpc_id" {
 variable "ilb_target_group_listener_port" {
   type = number
 }
-
+variable "ilb_listener_port" {
+  type = number
+}
 variable "ilb_target_group_listener_protocol" {
   type = string
 }

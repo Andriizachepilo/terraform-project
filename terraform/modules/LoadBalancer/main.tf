@@ -71,7 +71,7 @@ resource "aws_lb" "internal_load_balancer" {
 
 resource "aws_lb_listener" "internal_lb_listener" {
   load_balancer_arn = aws_lb.internal_load_balancer.arn
-  port              = var.ilb_listener_protocol == "HTTP" ? 80 : 443
+  port              = var.ilb_listener_port
   protocol          = var.ilb_listener_protocol
 
   default_action {

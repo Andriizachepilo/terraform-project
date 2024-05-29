@@ -59,6 +59,7 @@ module "load_balancer" {
   private_subnets     = module.security_groups.internal_lb_sg
 
   ilb_listener_protocol = var.ilb_listener_protocol
+  ilb_listener_port     = var.ilb_listener_port
 
   ilb_target_group_listener_port     = var.ilb_target_group_listener_port
   ilb_target_group_listener_protocol = var.alb_target_group_protocol

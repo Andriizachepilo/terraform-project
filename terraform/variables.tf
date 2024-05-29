@@ -37,6 +37,10 @@ variable "instance_type" {
   description = "Specifies the instance type for EC2 instances, such as t2.micro, m5.large, etc."
 }
 
+variable "ilb_listener_port" {
+  type = number
+}
+
 variable "key_name" {
   type        = string
   description = "Specifies the name of the SSH key pair used for accessing EC2 instances."
