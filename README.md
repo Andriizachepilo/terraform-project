@@ -9,7 +9,7 @@ CloudSmartHome was developed with the aim of revolutionizing home automation thr
 
 ## Architecture
 
-The architecture of CloudSmartHome is meticulously crafted to ensure optimal performance, security, and scalability. Key components of the architecture include:
+The architecture of CloudSmartHome is meticulously crafted to ensure optimal performance, security, and scalability. 
 
 ![Architecture](./screenshot/smarthouse.png)
 
