@@ -49,6 +49,18 @@ resource "aws_instance" "service_heating" {
     Name = "service_heating"
   }
 
+  provisioner "remote-exec" {
+    inline = [ 
+      "git clone https://github.com/Andriizachepilo/terraform-project/tree/main/services-example/heating"
+     ]
+  }
+
+  connection {
+    type = "ssh"
+    user = "ubuntu"
+    private_key = file("~/.ssh/my-key-pair.pem")
+    host = self.public_ip
+  }
 }
 
 resource "aws_instance" "status" {
@@ -63,6 +75,18 @@ resource "aws_instance" "status" {
     Name = "status"
   }
 
+  provisioner "remote-exec" {
+    inline = [ 
+      "git clone https://github.com/Andriizachepilo/terraform-project/tree/main/services-example/status"
+     ]
+  }
+
+  connection {
+    type = "ssh"
+    user = "ubuntu"
+    private_key = file("~/.ssh/my-key-pair.pem")
+    host = self.public_ip
+  }
 }
 
 resource "aws_instance" "auth" {
@@ -75,7 +99,7 @@ resource "aws_instance" "auth" {
   tags = {
     Name = "auth"
   }
-
+  
 }
 
 resource "aws_instance" "bastion" {
