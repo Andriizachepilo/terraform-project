@@ -56,7 +56,7 @@ module "load_balancer" {
   targets_id                  = module.ec2.public_instance_ids
 
   ilb_security_groups = module.security_groups.internal_lb_sg
-  private_subnets     = module.security_groups.internal_lb_sg
+  private_subnets     = module.vpc.private_subnets[0]
 
   ilb_listener_protocol = var.ilb_listener_protocol
   ilb_listener_port     = var.ilb_listener_port

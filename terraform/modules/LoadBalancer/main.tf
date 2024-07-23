@@ -4,13 +4,13 @@ resource "aws_lb" "app_load_balancer" {
   load_balancer_type = var.lb_type
   security_groups    = join(",", var.security_groups)
   subnets            = join(",", sort(var.public_subnets))
-
 }
 
 resource "aws_lb_listener" "public_facing_alb_listener" {
   load_balancer_arn = aws_lb.app_load_balancer.arn
   port              = var.alb_listener_protocol == "HTTP" ? 80 : 443
   protocol          = var.alb_listener_protocol
+  
   default_action {
     type = "fixed-response"
     fixed_response {
@@ -42,7 +42,7 @@ resource "aws_lb_listener_rule" "dynamic_rules" {
 resource "aws_lb_target_group" "public_ALB_target_group" {
   count    = length(var.alb_tg_name)
   name     = var.alb_tg_name[count.index]
-  port     = var.alb_target_group_port
+  port     = var.alb_target_group_port[count.index]
   protocol = var.alb_target_group_protocol
   vpc_id   = var.vpc_id
 
@@ -81,8 +81,6 @@ resource "aws_lb_listener" "internal_lb_listener" {
   depends_on = [aws_lb_target_group.internal_target_group]
 
 }
-
-
 
 resource "aws_lb_target_group" "internal_target_group" {
   name     = "Internal-load-balancer-TG"

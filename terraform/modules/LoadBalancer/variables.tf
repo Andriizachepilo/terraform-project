@@ -29,7 +29,7 @@ variable "targets_id" {
 }
 
 variable "alb_target_group_port" {
-  type = number
+  type = list(number)
 }
 
 variable "alb_target_group_protocol" {

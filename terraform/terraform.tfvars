@@ -32,23 +32,23 @@ key_name      = "my-key-pair"
 
 ilb_listener_port                   = 3000
 ilb_listener_protocol               = "HTTP"
-ilb_target_group_listener_port      = 3000
+ilb_target_group_listener_port      = 3004
 ilb__target_group_listener_protocol = "HTTP"
-private_instance_health_check       = "/api/auth"
+private_instance_health_check       = "/api/auth*"
 
 
 #Aplication load balancer 
 alb_listener_protocol = "HTTP"
-lb_type = "Application"
+lb_type               = "Application"
 
 #alb listener rules
 type         = "forward"
-path_pattern = ["/api/lights", "/api/heating", "/api/status"]
+path_pattern = ["/api/lights*", "/api/heating*", "/api/status*"]
 
 
 #alb target groups
 alb_tg_name                 = ["tg-lights", "tg-heating", "tg-status"]
-alb_target_group_port       = 3000
+alb_target_group_port       = [ 3000, 3002, 3003 ]
 alb_target_group_protocol   = "HTTP"
 instance_health_check_paths = ["/api/lights/health", "/api/heating/health", "/api/status/health"]
 

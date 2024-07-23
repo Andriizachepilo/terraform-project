@@ -52,7 +52,7 @@ variable "alb_listener_protocol" {
 }
 
 variable "alb_target_group_port" {
-  type        = number
+  type        = list(number)
   description = "Specifies the port number for the ALB target group."
 }
 

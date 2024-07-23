@@ -21,6 +21,19 @@ resource "aws_instance" "service_lighting" {
   tags = {
     Name = "service_lighting"
   }
+
+  provisioner "remote-exec" {
+    inline = [ 
+      "git clone https://github.com/Andriizachepilo/terraform-project/tree/main/services-example/lights"
+     ]
+  }
+
+  connection {
+    type = "ssh"
+    user = "ubuntu"
+    private_key = file("~/.ssh/my-key-pair.pem")
+    host = self.public_ip
+  }
 }
 
 resource "aws_instance" "service_heating" {
@@ -31,6 +44,7 @@ resource "aws_instance" "service_heating" {
   key_name               = var.key_name
 
   associate_public_ip_address = true
+  
   tags = {
     Name = "service_heating"
   }
@@ -44,6 +58,7 @@ resource "aws_instance" "status" {
   vpc_security_group_ids      = var.security_group_ids
   associate_public_ip_address = true
   key_name                    = var.key_name
+  
   tags = {
     Name = "status"
   }
@@ -56,6 +71,7 @@ resource "aws_instance" "auth" {
   subnet_id              = var.private_subnets[0]
   vpc_security_group_ids = var.security_group_ids_private_ec2
   key_name               = var.key_name
+
   tags = {
     Name = "auth"
   }
