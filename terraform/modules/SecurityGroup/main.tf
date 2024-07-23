@@ -75,7 +75,7 @@ resource "aws_security_group" "internal_lb_sg" {
   }
 
 
-  #allow egress traffic only from private ec2 instance
+  #allow egress traffic only from private and public ec2 instances
   egress {
     from_port   = 3000
     to_port     = 3004
@@ -104,7 +104,7 @@ resource "aws_security_group" "public_instance_sg" {
     security_groups = [aws_security_group.load_balancer_sg.id]
   }
 
-  #allow all egress for "git clone " and "docker pull"
+  #allow all egress for "git clone " and "docker pull", connection to the private instance
   egress {
     from_port   = 0
     to_port     = 65535
